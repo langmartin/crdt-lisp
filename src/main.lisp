@@ -6,7 +6,7 @@
   (:export zero send recv unix-milliseconds make-hlc))
 
 (defpackage crdt-lisp/cluster
-  (:use :cl :local-time :crdt-lisp/hlc)
+  (:use :cl :local-time :crdt-lisp/hlc :cl-arrows)
   (:export join-cluster))
 
 (defpackage crdt-lisp/schema

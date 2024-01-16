@@ -2,7 +2,8 @@
   :version "0.1.0"
   :author ""
   :license ""
-  :depends-on ("local-time")
+  :depends-on ("local-time"
+               "cl-arrows")
   :components ((:module "src"
                 :components
                 ((:file "main"))))
