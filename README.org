@@ -3,3 +3,7 @@
 ** Usage
 
 ** Installation
+
+** Testing
+
+: Make test

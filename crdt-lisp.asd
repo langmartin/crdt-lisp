@@ -2,7 +2,7 @@
   :version "0.1.0"
   :author ""
   :license ""
-  :depends-on ()
+  :depends-on ("local-time")
   :components ((:module "src"
                 :components
                 ((:file "main"))))
@@ -13,7 +13,8 @@
   :author ""
   :license ""
   :depends-on ("crdt-lisp"
-               "rove")
+               "rove"
+               "local-time")
   :components ((:module "tests"
                 :components
                 ((:file "main"))))
