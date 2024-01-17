@@ -6,7 +6,10 @@
                "cl-arrows")
   :components ((:module "src"
                 :components
-                ((:file "main"))))
+                ((:file "packages")
+                 (:file "hlc")
+                 (:file "cluster")
+                 (:file "schema"))))
   :description ""
   :in-order-to ((test-op (test-op "crdt-lisp/tests"))))
 
