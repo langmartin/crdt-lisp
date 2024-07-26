@@ -1,15 +1,24 @@
-libraries = cl-arrows cl-zmq
-install-deps: $(addprefix ~/.quicklisp/local-projects/,$(libraries))
+QL = ~/.quicklisp/local-projects
+WD = $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
-test: ~/.quicklisp/local-projects/cl-arrows
+repl: install-deps $(QL)/crdt-lisp
+	sbcl --eval "(asdf:operate 'asdf:load-op 'crdt-lisp)"
+
+libraries = cl-arrows cl-zmq
+install-deps: $(addprefix $(QL)/,$(libraries))
+
+test: $(QL)/cl-arrows
 	sbcl --eval '(asdf:test-system :crdt-lisp)' --quit
 
-~/.quicklisp/local-projects/cl-arrows:
-	cd ~/.quicklisp/local-projects && git clone https://github.com/nightfly19/cl-arrows.git
+$(QL)/crdt-lisp:
+	cd $(QL) && ln -sfn $(WD) $@
+
+$(QL)/cl-arrows:
+	cd $(QL) && clone https://github.com/nightfly19/cl-arrows.git
 	sbcl --eval '(ql:quickload "cl-arrows")' --quit
 
-~/.quicklisp/local-projects/cl-zmq:
-	cd ~/.quicklisp/local-projects && git clone https://repo.or.cz/cl-zmq.git
+$(QL)/cl-zmq:
+	cd $(QL) && git clone https://repo.or.cz/cl-zmq.git
 	LIBRARY_PATH=/opt/homebrew/lib \
 	CPATH=/opt/homebrew/include \
 	sbcl \

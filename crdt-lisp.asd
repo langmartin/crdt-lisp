@@ -3,7 +3,8 @@
   :author ""
   :license ""
   :depends-on ("local-time"
-               "cl-arrows")
+               "cl-arrows"
+               "zeromq")
   :components ((:module "src"
                 :components
                 ((:file "packages")

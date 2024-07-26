@@ -12,7 +12,9 @@
 (defun to-network (message)
   (prin1-to-string
    (cond ((envelope-p message)
-          '(ENV (to-network (envelope-hulc message)) (to-network (envelope-message message))))
+          '(ENV
+            (to-network (envelope-hulc message))
+            (to-network (envelope-message message))))
          ((hlc-p message)
           '(HLC (hlc-time message) (hlc-tick message)))
          (t message))))
