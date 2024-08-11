@@ -3,6 +3,7 @@
   :author ""
   :license ""
   :depends-on ("cl-arrows"
+               "cl-intbytes"
                "ironclad"
                "local-time"
                "s-base64"

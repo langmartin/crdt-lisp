@@ -10,7 +10,7 @@
   (:export join-cluster))
 
 (defpackage crdt-lisp/node-id
-  (:use :cl :cl-arrows :cl-octet-streams :s-base64))
+  (:use :cl :cl-arrows :cl-octet-streams :s-base64 :cl-intbytes))
 
 (defpackage crdt-lisp/schema
   (:use :cl)

@@ -6,7 +6,7 @@
   (make-hlc :time (funcall system-clock 0)
             :tick 0))
 
-(defun send (hlc &optional (system-clock 'default-system-clock))
+(defun send (hlc &optional (system-clock #'default-system-clock))
   (let ((time (max (hlc-time hlc)
                    (funcall system-clock (hlc-time hlc)))))
     (make-hlc :time time
@@ -14,7 +14,7 @@
                         (+ 1 (hlc-tick hlc))
                         0))))
 
-(defun recv (hlc message-hlc &optional (system-clock 'default-system-clock))
+(defun recv (hlc message-hlc &optional (system-clock #'default-system-clock))
   (let ((time (max (hlc-time hlc)
                    (hlc-time message-hlc)
                    (funcall system-clock (hlc-time hlc)))))

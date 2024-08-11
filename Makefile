@@ -9,11 +9,13 @@ test: install-deps $(QL)/cl-arrows
 
 libraries = \
 cl-arrows \
-cl-zmq \
+cl-intbytes
 cl-octet-streams \
+cl-zmq \
 local-time \
 ironclad \
-s-base64
+s-base64 \
+
 
 install-deps: $(addprefix $(QL)/,$(libraries))
 
