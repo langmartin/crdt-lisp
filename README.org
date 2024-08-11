@@ -1,6 +1,13 @@
 * Crdt-Lisp
 
-** Usage
+** Development
+
+Install quicklisp & sbcl: https://lisp-lang.org/learn/getting-started/
+
+#+begin_src
+  M-x slime
+  (ql:quickload :crdt-lisp)
+#+end_src
 
 ** Installation
 

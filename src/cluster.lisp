@@ -1,5 +1,3 @@
-(ql:quickload :zeromq)
-
 (in-package :crdt-lisp/cluster)
 
 (defstruct cluster name listen connect node-id hlc peer-connections handler)
