@@ -2,8 +2,10 @@
   :version "0.1.0"
   :author ""
   :license ""
-  :depends-on ("local-time"
-               "cl-arrows"
+  :depends-on ("cl-arrows"
+               "ironclad"
+               "local-time"
+               "s-base64"
                "zeromq")
   :components ((:module "src"
                 :components

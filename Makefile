@@ -1,7 +1,3 @@
-export LIBRARY_PATH=/opt/homebrew/lib
-export CPATH=/opt/homebrew/include
-export INCLUDE=/opt/homebrew/include
-
 QL = ~/.quicklisp/local-projects
 WD = $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
@@ -11,8 +7,19 @@ repl: install-deps $(QL)/crdt-lisp
 test: install-deps $(QL)/cl-arrows
 	sbcl --eval '(asdf:test-system :crdt-lisp)' --quit
 
-libraries = cl-arrows cl-zmq local-time
+libraries = \
+cl-arrows \
+cl-zmq \
+cl-octet-streams \
+local-time \
+ironclad \
+s-base64
+
 install-deps: $(addprefix $(QL)/,$(libraries))
+
+export LIBRARY_PATH=/opt/homebrew/lib
+export CPATH=/opt/homebrew/include
+export INCLUDE=/opt/homebrew/include
 
 $(QL)/crdt-lisp:
 	cd $(QL) && ln -sfn $(WD) $@
