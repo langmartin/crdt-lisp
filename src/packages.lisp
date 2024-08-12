@@ -5,7 +5,7 @@
   (:use :cl :cl-arrows)
   (:import-from :cl-octet-streams)
   (:import-from :s-base64)
-  (:export b64 b64->8-octets))
+  (:export b64 unb64))
 
 (defpackage crdt-lisp/hlc
   (:use :cl :cl-arrows)
