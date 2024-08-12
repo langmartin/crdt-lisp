@@ -34,6 +34,9 @@ $(QL)/cl-zmq:
 $(QL)/cl-arrows:
 	cd $(QL) && git clone https://github.com/nightfly19/cl-arrows.git
 
+# FSET quicklisp has an installation bug in the latest sbcl and ql version of fset:
+# https://github.com/slburson/fset/issues/51
+
 $(QL)/fset:
 	cd $(QL) && git clone https://github.com/slburson/fset.git
 
