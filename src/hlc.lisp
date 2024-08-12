@@ -40,6 +40,34 @@
       (and (= (hlc-time a) (hlc-time b))
            (< (hlc-tick a) (hlc-tick b)))))
 
+(defun hulc-string (hlc node-id)
+  (concatenate
+   'string
+   (u:b64
+    (concatenate '(vector unsigned-byte)
+                 (h->bs (hlc-time hlc) 6)
+                 (h->bs (hlc-tick hlc) 2)))
+   node-id))
+
+(defun h->bs (int size)
+  (-> int (cl-intbytes:int->octets size) (reverse)))
+
+(defun bs->int (bytes start end)
+  (let ((len (- end start)))
+    (-> bytes (subseq start end) (reverse) (cl-intbytes:octets->uint len))))
+
+(defun hulc-parse (hex-str-22)
+  (let* ((hlc-pair (hulc-split hex-str-22))
+         (node-id (cdr hlc-pair))
+         (bytes (u:b64->8-octets (car hlc-pair))))
+    (cons (make-hlc :time (bs->int bytes 0 6)
+                    :tick (bs->int bytes 6 8))
+          node-id)))
+
+(defun hulc-split (hex-str-22)
+  (cons (subseq hex-str-22 0 11)
+        (subseq hex-str-22 11 22)))
+
 ;;; Implement this interface to inject a clock for testing
 (defun default-system-clock (_last)
   (declare (ignore _last))

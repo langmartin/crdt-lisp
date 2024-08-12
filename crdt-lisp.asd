@@ -14,6 +14,7 @@
   :components ((:module "src"
                 :components
                 ((:file "packages")
+                 (:file "util")
                  (:file "hlc")
                  (:file "cluster")
                  (:file "schema")
