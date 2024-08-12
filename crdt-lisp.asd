@@ -3,23 +3,13 @@
   :author ""
   :license ""
   :depends-on ("cl-arrows")
-  :components
-  ((:module "src"
-    :components
-    ((:file "packages")
-     (:module "hlc"
-      :depends-on ("local-time")
-      :components
-      ((:file "hlc")))
-     (module "cluster"
-             :depends-on ("zeromq")
-             :components
-             ((:file "cluster")))
-     (:file "schema")
-     (module "node-id"
-             :depends-on ("cl-intbytes" "cl-octet-streams" "ironclad" "s-base64")
-             :components
-             ((:file "node-id"))))))
+  :components ((:module "src"
+                :components
+                ((:file "packages")
+                 (:file "hlc" :depends-on ("local-time"))
+                 (:file "cluster" :depends-on ("zeromq"))
+                 (:file "schema")
+                 (:file "node-id" :depends-on ("cl-intbytes" "cl-octet-streams" "ironclad" "s-base64")))))
   :description ""
   :in-order-to ((test-op (test-op "crdt-lisp/tests"))))
 
