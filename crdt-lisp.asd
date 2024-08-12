@@ -2,14 +2,21 @@
   :version "0.1.0"
   :author ""
   :license ""
-  :depends-on ("cl-arrows")
+  :depends-on ("cl-arrows"
+               "cl-intbytes"
+               "cl-octet-streams"
+               "ironclad"
+               "local-time"
+               "s-base64"
+               "zeromq")
+  :serial t
   :components ((:module "src"
                 :components
                 ((:file "packages")
-                 (:file "hlc" :depends-on ("local-time"))
-                 (:file "cluster" :depends-on ("zeromq"))
+                 (:file "hlc")
+                 (:file "cluster")
                  (:file "schema")
-                 (:file "node-id" :depends-on ("cl-intbytes" "cl-octet-streams" "ironclad" "s-base64")))))
+                 (:file "node-id"))))
   :description ""
   :in-order-to ((test-op (test-op "crdt-lisp/tests"))))
 
