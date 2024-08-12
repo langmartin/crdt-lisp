@@ -12,7 +12,7 @@ test: install-deps
 # not available in quicklisp repos. Homebrew includes are required for
 # c ffi compilation dependencies.
 
-libraries = crdt-lisp cl-arrows cl-zmq
+libraries = crdt-lisp cl-arrows cl-zmq misc-extensions fset
 
 install-deps: ~/.quicklisp $(addprefix $(QL)/,$(libraries))
 
@@ -24,16 +24,21 @@ $(QL)/crdt-lisp:
 	cd $(QL) && ln -sfn $(WD) $@
 	sbcl --eval '(ql:register-local-projects)' --quit
 
-$(QL)/cl-arrows:
-	cd $(QL) && git clone https://github.com/nightfly19/cl-arrows.git
-	sbcl --eval '(ql:quickload "cl-arrows")' --quit
-
 $(QL)/cl-zmq:
 	cd $(QL) && git clone https://repo.or.cz/cl-zmq.git
 	sbcl \
 	--eval '(ql:quickload "cffi-grovel")' \
 	--eval '(ql:quickload "zeromq")' \
 	--quit
+
+$(QL)/cl-arrows:
+	cd $(QL) && git clone https://github.com/nightfly19/cl-arrows.git
+
+$(QL)/fset:
+	cd $(QL) && git clone https://github.com/slburson/fset.git
+
+$(QL)/misc-extensions:
+	cd $(QL) && git clone https://github.com/slburson/misc-extensions.git
 
 ~/.quicklisp:
 	curl -o .ql.lisp http://beta.quicklisp.org/quicklisp.lisp

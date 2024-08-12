@@ -35,6 +35,12 @@
 (defun unix-ms (hlc)
   (hlc-time hlc))
 
+(defun lt? (a b)
+  (or (< (hlc-time a) (hlc-time b))
+      (and (= (hlc-time a) (hlc-time b))
+           (< (hlc-tick a) (hlc-tick b)))))
+
+;;; Implement this interface to inject a clock for testing
 (defun default-system-clock (_last)
   (declare (ignore _last))
   (let* ((lt (local-time:now))

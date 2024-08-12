@@ -5,6 +5,7 @@
   :depends-on ("cl-arrows"
                "cl-intbytes"
                "cl-octet-streams"
+               "fset"
                "ironclad"
                "local-time"
                "s-base64"
@@ -16,7 +17,8 @@
                  (:file "hlc")
                  (:file "cluster")
                  (:file "schema")
-                 (:file "node-id"))))
+                 (:file "node-id")
+                 (:file "anti-entropy"))))
   :description ""
   :in-order-to ((test-op (test-op "crdt-lisp/tests"))))
 
