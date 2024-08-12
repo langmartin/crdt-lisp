@@ -2,15 +2,16 @@
   (:use :cl))
 
 (defpackage crdt-lisp/hlc
-  (:use :cl :local-time :cl-arrows)
-  (:export zero send recv unix-milliseconds make-hlc))
+  (:use :cl :cl-arrows)
+  (:export zero send recv make-hlc))
 
 (defpackage crdt-lisp/cluster
   (:use :cl :local-time :crdt-lisp/hlc :cl-arrows)
   (:export join-cluster))
 
 (defpackage crdt-lisp/node-id
-  (:use :cl :cl-arrows :cl-octet-streams :s-base64 :cl-intbytes))
+  (:use :cl :cl-arrows)
+  (:export make-node-id))
 
 (defpackage crdt-lisp/schema
   (:use :cl)

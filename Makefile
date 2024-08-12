@@ -7,16 +7,7 @@ repl: install-deps $(QL)/crdt-lisp
 test: install-deps $(QL)/cl-arrows
 	sbcl --eval '(asdf:test-system :crdt-lisp)' --quit
 
-libraries = \
-cl-arrows \
-cl-intbytes
-cl-octet-streams \
-cl-zmq \
-local-time \
-ironclad \
-s-base64 \
-
-
+libraries = crdt-lisp cl-arrows cl-zmq
 install-deps: $(addprefix $(QL)/,$(libraries))
 
 export LIBRARY_PATH=/opt/homebrew/lib
@@ -25,6 +16,7 @@ export INCLUDE=/opt/homebrew/include
 
 $(QL)/crdt-lisp:
 	cd $(QL) && ln -sfn $(WD) $@
+	sbcl --eval '(ql:register-local-projects)' --quit
 
 $(QL)/cl-arrows:
 	cd $(QL) && git clone https://github.com/nightfly19/cl-arrows.git
@@ -35,10 +27,5 @@ $(QL)/cl-zmq:
 	sbcl \
 	--eval '(ql:quickload "cffi-grovel")' \
 	--eval '(ql:quickload "zeromq")' \
-	--quit
-
-$(QL)/%:
-	sbcl \
-	--eval '(ql:quickload "$*")' \
 	--quit
 

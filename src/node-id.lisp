@@ -25,7 +25,7 @@
   (->> (local-time:now)
        (local-time:timestamp-to-unix)))
 
-(defun make ()
+(defun make-node-id ()
   (concatenate 'string
                (host-hash)
                (seconds)))
