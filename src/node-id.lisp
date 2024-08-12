@@ -22,8 +22,8 @@
       (base64)))
 
 (defun default-system-clock ()
-  (->> (local-time:now)
-       (local-time:timestamp-to-unix)))
+  (-> (local-time:now)
+      (local-time:timestamp-to-unix)))
 
 (defun make-node-id ()
   (concatenate 'string

@@ -32,7 +32,7 @@
 
                           (t 0)))))
 
-(defun unix-milliseconds (hlc)
+(defun unix-ms (hlc)
   (hlc-time hlc))
 
 (defun default-system-clock (_last)

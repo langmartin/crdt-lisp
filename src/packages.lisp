@@ -3,7 +3,7 @@
 
 (defpackage crdt-lisp/hlc
   (:use :cl :cl-arrows)
-  (:export zero send recv make-hlc))
+  (:export zero send recv make-hlc unix-ms))
 
 (defpackage crdt-lisp/cluster
   (:use :cl :local-time :crdt-lisp/hlc :cl-arrows)

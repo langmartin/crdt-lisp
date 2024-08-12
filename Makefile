@@ -1,14 +1,20 @@
 QL = ~/.quicklisp/local-projects
 WD = $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
-repl: install-deps $(QL)/crdt-lisp
+repl: install-deps
 	sbcl --eval "(asdf:operate 'asdf:load-op 'crdt-lisp)"
 
-test: install-deps $(QL)/cl-arrows
+test: install-deps
 	sbcl --eval '(asdf:test-system :crdt-lisp)' --quit
 
+# ========================================================================
+# Some libraries have to be cloned to local-projects because they're
+# not available in quicklisp repos. Homebrew includes are required for
+# c ffi compilation dependencies.
+
 libraries = crdt-lisp cl-arrows cl-zmq
-install-deps: $(addprefix $(QL)/,$(libraries))
+
+install-deps: ~/.quicklisp $(addprefix $(QL)/,$(libraries))
 
 export LIBRARY_PATH=/opt/homebrew/lib
 export CPATH=/opt/homebrew/include
@@ -29,3 +35,10 @@ $(QL)/cl-zmq:
 	--eval '(ql:quickload "zeromq")' \
 	--quit
 
+~/.quicklisp:
+	curl -o .ql.lisp http://beta.quicklisp.org/quicklisp.lisp
+	sbcl --no-sysinit --no-userinit --load .ql.lisp \
+	--eval '(quicklisp-quickstart:install :path "~/.quicklisp")' \
+	--eval '(ql:add-to-init-file)' \
+	--quit
+	rm .ql.lisp

@@ -2,16 +2,19 @@
 
 ** Development
 
-Install quicklisp & sbcl: https://lisp-lang.org/learn/getting-started/
+Install sbcl and quicklisp and our project-specific ffi dependencies:
 
-#+begin_src
-  M-x slime
-  (ql:quickload :crdt-lisp)
-  (asdf:load-system :crdt-lisp)
+#+begin_src sh
+  brew install sbcl zeromq
+  make
 #+end_src
+
+Quicklisp installation in the Makefile follows https://lisp-lang.org/learn/getting-started/.
+
+- Start a project repl =M-x slime=
+- Load the project files =(ql:quickload :crdt-lisp)=
+- Maybe load the system? =(asdf:load-system :crdt-lisp)=
 
 ** Installation
 
 ** Testing
-
-: Make test
