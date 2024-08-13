@@ -12,7 +12,7 @@
       (start-server)
       (connect-bootstrap)))
 
-(defun send (c message)
+(defun send-cluster (c message)
   (mapcan (lambda (peer-socket)
             (zmq:send (cdr peer-socket) message))
           (cluster-peer-connections c)))

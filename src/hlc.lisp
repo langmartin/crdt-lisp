@@ -75,10 +75,3 @@
          (s (local-time:timestamp-to-unix lt))
          (ms (local-time:timestamp-millisecond lt)))
     (+ (* 1000 s) ms)))
-
-(let ((t0 (send (zero)))
-      (n0 (crdt-lisp/node-id:make-node-id)))
-  (length (u:unb64 (hulc-string t0 n0)))
-  ;; (equalp (cons t0 n0)
-  ;;         (hulc-parse (hulc-string t0 n0)))
-  )

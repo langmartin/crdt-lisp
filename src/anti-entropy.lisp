@@ -28,20 +28,23 @@
   (u:unb64 hulc-string))
 
 (defun hash-one (key hulc)
-  (-<>> (concatenate '(vector (unsigned-byte 8))
-                     (key-octets key)
-                     (hulc-octets hulc))
-        (ironclad:digest-sequence :sha256)
-        (octets->bit-vector)))
+  (->> (concatenate '(vector (unsigned-byte 8))
+                    (key-octets key)
+                    (hulc-octets hulc))
+       (ironclad:digest-sequence :sha256)
+       (octets->int)))
 
-(defun octets->bit-vector (octets)
+(defun octets->int (octets)
   (cl-intbytes:octets->int octets (length octets)))
 
-(let* ((t0 (crdt-lisp/hlc:send (crdt-lisp/hlc:zero)))
-       (n0 (crdt-lisp/node-id:make-node-id))
-       (h0 (crdt-lisp/hlc:hulc-string t0 n0)))
-  (hash-xor (hash-one "foo" h0)
-            (hash-one "foo" h0)))
+(defun hash-xor (&rest hashes)
+  (reduce #'logxor hashes))
 
-(defun hash-xor (a b)
-  (bit-xor a b))
+(defun hash-n-bytes (hash)
+  (-> hash integer-length (/ 8) ceiling))
+
+(defun hash-string (hash)
+  (with-output-to-string (out)
+    (-> hash
+        (cl-intbytes:int->octets (hash-n-bytes hash))
+        (s-base64:encode-base64-bytes out))))

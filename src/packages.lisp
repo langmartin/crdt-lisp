@@ -15,7 +15,7 @@
 
 (defpackage crdt-lisp/cluster
   (:use :cl :local-time :crdt-lisp/hlc :cl-arrows)
-  (:export join-cluster))
+  (:export join-cluster send-cluster))
 
 (defpackage crdt-lisp/node-id
   (:use :cl :cl-arrows)

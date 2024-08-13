@@ -13,7 +13,9 @@ Quicklisp installation in the Makefile follows https://lisp-lang.org/learn/getti
 
 - Start a project repl =M-x slime=
 - Load the project files =(ql:quickload :crdt-lisp)=
-- Maybe load the system? =(asdf:load-system :crdt-lisp)=
+- Load the tests =(ql:quickload :crdt-lisp/tests)=
+- Maybe load the system? =(asdf:load-system :crdt-lisp)= I don't think
+  you actually need to do this part
 
 ** Installation
 
