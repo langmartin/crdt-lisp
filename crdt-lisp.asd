@@ -2,7 +2,8 @@
   :version "0.1.0"
   :author ""
   :license ""
-  :depends-on ("cl-arrows"
+  :depends-on ("bordeaux-threads"
+               "cl-arrows"
                "cl-intbytes"
                "cl-octet-streams"
                "fset"
@@ -10,6 +11,7 @@
                "local-time"
                "marshal"
                "s-base64"
+               "tsqueue"
                "zeromq")
   :serial t
   :components ((:module "src"
@@ -17,10 +19,12 @@
                 ((:file "packages")
                  (:file "util")
                  (:file "hlc")
-                 (:file "cluster")
                  (:file "schema")
                  (:file "node-id")
-                 (:file "anti-entropy"))))
+                 (:file "anti-entropy")
+                 (:file "cluster/store")
+                 (:file "cluster")
+                 (:file "main"))))
   :description ""
   :in-order-to ((test-op (test-op "crdt-lisp/tests"))))
 

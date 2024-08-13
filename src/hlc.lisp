@@ -40,6 +40,9 @@
       (and (= (hlc-time a) (hlc-time b))
            (< (hlc-tick a) (hlc-tick b)))))
 
+(defun hulc-max (a b)
+  (if (lt? a b) b a))
+
 (defun hulc-string (hlc node-id)
   (concatenate
    'string
