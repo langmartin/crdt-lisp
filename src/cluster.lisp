@@ -9,8 +9,8 @@
                     :hlc (crdt-lisp/hlc:zero)
                     :peer-connections '()
                     :handler handler)
-      (start-server)
-      (connect-bootstrap)))
+      (start-server!)
+      (connect-bootstrap!)))
 
 (defun send-cluster (c message)
   (mapcan (lambda (peer-socket)
@@ -36,7 +36,7 @@
           (funcall (cluster-handler c) query))
         (zmq:send socket (make-instance 'zmq:msg :data "OK"))))))
 
-(defun connect-bootstrap (c)
+(defun connect-bootstrap! (c)
   (zmq:with-context (ctx)
     (zmq:with-socket (socket ctx 'zmq:req)
       (let ((peer (cluster-connect c)))

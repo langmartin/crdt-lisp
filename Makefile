@@ -1,9 +1,9 @@
 QL = ~/.quicklisp/local-projects
 WD = $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
-libraries = crdt-lisp cl-arrows cl-zmq misc-extensions fset
+libraries = cl-arrows cl-zmq misc-extensions fset
 
-install-deps: ~/.quicklisp $(addprefix $(QL)/,$(libraries))
+install-deps: ~/.quicklisp $(addprefix $(QL)/,$(libraries)) $(QL)/crdt-lisp
 
 repl: install-deps
 	sbcl --eval "(asdf:operate 'asdf:load-op 'crdt-lisp)"

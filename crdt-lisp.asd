@@ -31,6 +31,7 @@
   :components ((:module "tests"
                 :components
                 ((:file "hlc")
-                 (:file "main"))))
+                 (:file "main")
+                 (:file "anti-entropy"))))
   :description "Test system for crdt-lisp"
   :perform (test-op (op c) (symbol-call :rove :run c)))

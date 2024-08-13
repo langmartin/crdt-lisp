@@ -9,18 +9,18 @@
          (t1 (send t0 'test-clock)))
 
     (testing "init"
-      (ok (= 1 (unix-milliseconds t0))))
+      (ok (= 1 (unix-ms t0))))
 
     (testing "send"
-      (ok (= 2 (unix-milliseconds t1))))
+      (ok (= 2 (unix-ms t1))))
 
     (testing "recv-1"
       ;; physical time
-      (ok (= 3 (unix-milliseconds (recv t1 (make-hlc :time 2 :tick 2) 'test-clock))))
+      (ok (= 3 (unix-ms (recv t1 (make-hlc :time 2 :tick 2) 'test-clock))))
       ;; message time
-      (ok (= 4 (unix-milliseconds (recv t1 (make-hlc :time 4 :tick 2) 'test-clock))))
+      (ok (= 4 (unix-ms (recv t1 (make-hlc :time 4 :tick 2) 'test-clock))))
       ;; logical time
-      (ok (= 2 (unix-milliseconds (recv t1 (make-hlc :time 1 :tick 2) 'zero-clock)))))))
+      (ok (= 2 (unix-ms (recv t1 (make-hlc :time 1 :tick 2) 'zero-clock)))))))
 
 (defun test-clock (last)
   (+ 1 last))

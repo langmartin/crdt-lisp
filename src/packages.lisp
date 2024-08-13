@@ -18,6 +18,7 @@
 
 (defpackage crdt-lisp/cluster
   (:import-from :local-time)
+  (:import-from :zmq)
   (:local-nicknames (:h :crdt-lisp/hlc))
   (:use :cl :cl-arrows)
   (:export #:join-cluster #:send-cluster))
