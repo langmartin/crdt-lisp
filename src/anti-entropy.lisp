@@ -1,7 +1,7 @@
 (in-package :crdt-lisp/anti-entropy)
 
 (defun make-store ()
-  (empty-map))
+  (fset:empty-map))
 
 (defun put (store key hlc value)
   (let ((prev (fetch-pair store key)))

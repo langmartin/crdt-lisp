@@ -1,7 +1,6 @@
 (in-package :crdt-lisp/schema)
 
 (defstruct envelope message hulc)
-(defstruct hlc time tick)
 
 (defun messagep (message)
   (or (envelope-p message)

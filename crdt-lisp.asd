@@ -8,6 +8,7 @@
                "fset"
                "ironclad"
                "local-time"
+               "marshal"
                "s-base64"
                "zeromq")
   :serial t

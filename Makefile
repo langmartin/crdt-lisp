@@ -1,6 +1,10 @@
 QL = ~/.quicklisp/local-projects
 WD = $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
+libraries = crdt-lisp cl-arrows cl-zmq misc-extensions fset
+
+install-deps: ~/.quicklisp $(addprefix $(QL)/,$(libraries))
+
 repl: install-deps
 	sbcl --eval "(asdf:operate 'asdf:load-op 'crdt-lisp)"
 
@@ -11,10 +15,6 @@ test: install-deps
 # Some libraries have to be cloned to local-projects because they're
 # not available in quicklisp repos. Homebrew includes are required for
 # c ffi compilation dependencies.
-
-libraries = crdt-lisp cl-arrows cl-zmq misc-extensions fset
-
-install-deps: ~/.quicklisp $(addprefix $(QL)/,$(libraries))
 
 export LIBRARY_PATH=/opt/homebrew/lib
 export CPATH=/opt/homebrew/include
