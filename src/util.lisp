@@ -18,4 +18,5 @@
 (defun fix-padding (str)
   (case (length str)
     (11 (concatenate 'string str "="))
-    (22 (concatenate 'string str "=="))))
+    (22 (concatenate 'string str "=="))
+    (T str)))

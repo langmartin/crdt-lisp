@@ -21,6 +21,4 @@
 
     (testing "encoding a hash to a string correctly"
       (= h2
-         (sut::octets->int
-          (with-input-from-string (in (sut::hash-string h2))
-            (s-base64:decode-base64-bytes in)))))))
+         (sut::octets->int (u:unb64 (sut::hash-string h2)))))))
