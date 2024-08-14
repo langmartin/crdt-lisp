@@ -44,13 +44,11 @@
   (if (lt? a b) b a))
 
 (defun hulc-string (hlc node-id)
-  (concatenate
-   'string
-   (u:b64
-    (concatenate '(vector unsigned-byte)
-                 (h->bs (hlc-time hlc) 6)
-                 (h->bs (hlc-tick hlc) 2)))
-   node-id))
+  (u:b64
+   (concatenate '(vector unsigned-byte)
+                (h->bs (hlc-time hlc) 6)
+                (h->bs (hlc-tick hlc) 2)
+                (u:unb64 node-id))))
 
 (defun h->bs (int size)
   (-> int (cl-intbytes:int->octets size) (reverse)))
@@ -59,10 +57,10 @@
   (let ((len (- end start)))
     (-> bytes (subseq start end) (reverse) (cl-intbytes:octets->uint len))))
 
-(defun hulc-parse (hex-str-22)
-  (let* ((hlc-pair (hulc-split hex-str-22))
-         (node-id (cdr hlc-pair))
-         (bytes (u:unb64 (car hlc-pair))))
+(defun hulc-parse (base64-str-combo)
+  (let* ((bytes (u:unb64 base64-str-combo))
+         (node-id (u:b64 (subseq bytes 8 16)))
+         (bytes (subseq bytes 0 8)))
     (cons (make-hlc :time (bs->int bytes 0 6)
                     :tick (bs->int bytes 6 8))
           node-id)))

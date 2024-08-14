@@ -34,4 +34,9 @@
         (n0 (crdt-lisp/node-id:make-node-id)))
     (testing "round trip"
       (ok (equalp (cons t0 n0)
-                  (hulc-parse (hulc-string t0 n0)))))))
+                  (hulc-parse (hulc-string t0 n0))))))
+
+  (let ((t0 (send (zero)))
+        (n0 (crdt-lisp/node-id:make-node-id)))
+    (equalp (cons t0 n0)
+            (hulc-parse (hulc-string t0 n0)))))

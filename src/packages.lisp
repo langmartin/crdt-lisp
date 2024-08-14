@@ -5,7 +5,7 @@
   (:use :cl :cl-arrows)
   (:import-from :cl-octet-streams)
   (:import-from :s-base64)
-  (:export #:b64 #:unb64))
+  (:export #:b64 #:unb64 #:split-while #:fn1))
 
 (defpackage crdt-lisp/hlc
   (:import-from :cl-intbytes)
@@ -33,10 +33,9 @@
   (:import-from :ironclad)
   (:import-from :cl-octet-streams)
   (:local-nicknames (:h :crdt-lisp/hlc)
-                    (:u :crdt-lisp/util)
                     (:n :crdt-lisp/node-id))
-  (:use :cl :cl-arrows)
-  (:export #:make-store #:put #:fetch))
+  (:use :cl :cl-arrows :crdt-lisp/util)
+  (:export #:make-store #:put #:fetch #:make-request))
 
 (defpackage crdt-lisp/cluster/store
   (:import-from :crdt-lisp/node-id #:make-node-id)
@@ -46,6 +45,7 @@
                     (:th :bordeaux-threads))
   (:use :cl :cl-arrows)
   (:export #:start-store! #:stop-store!
+           #:send-time #:recv-time
            #:get-ae #:put-ae #:recv-ae
            #:make-ae-req #:make-ae-res #:recv-ae-res))
 
