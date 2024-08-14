@@ -35,27 +35,35 @@
   (:local-nicknames (:h :crdt-lisp/hlc)
                     (:n :crdt-lisp/node-id))
   (:use :cl :cl-arrows :crdt-lisp/util)
-  (:export #:make-store #:put #:fetch #:make-request))
+  (:export #:make-store #:put #:fetch #:make-request #:make-response))
+
+(defpackage crdt-lisp/cluster/send
+  (:import-from :tsq)
+  (:import-from :marshal)
+  (:use :cl :cl-arrows)
+  (:export #:send))
 
 (defpackage crdt-lisp/cluster/store
   (:import-from :crdt-lisp/node-id #:make-node-id)
   (:import-from :tsq)
   (:local-nicknames (:ae :crdt-lisp/anti-entropy)
                     (:h :crdt-lisp/hlc)
+                    (:send :crdt-lisp/cluster/send)
                     (:th :bordeaux-threads))
   (:use :cl :cl-arrows)
   (:export #:start-store! #:stop-store!
            #:send-time #:recv-time
            #:get-ae #:put-ae #:recv-ae
-           #:make-ae-req #:make-ae-res #:recv-ae-res))
+           #:send-ae-req #:recv-ae-req))
 
 (defpackage crdt-lisp/cluster
   (:import-from :local-time)
   (:import-from :zmq)
-  (:local-nicknames (:st :crdt-lisp/cluster/store)
+  (:local-nicknames (:send :crdt-lisp/cluster/send)
+                    (:st :crdt-lisp/cluster/store)
                     (:th :bordeaux-threads))
   (:use :cl :cl-arrows)
-  (:export #:join-cluster! #:send-cluster))
+  (:export #:join-cluster!))
 
 (defpackage crdt-lisp/main
   (:local-nicknames (:cluster :crdt-lisp/cluster)

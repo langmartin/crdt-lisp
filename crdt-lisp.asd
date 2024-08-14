@@ -22,6 +22,7 @@
                  (:file "schema")
                  (:file "node-id")
                  (:file "anti-entropy")
+                 (:file "cluster/send")
                  (:file "cluster/store")
                  (:file "cluster")
                  (:file "main"))))

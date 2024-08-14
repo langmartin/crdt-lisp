@@ -27,24 +27,23 @@
       (th:release-lock *clock-lock*)
       (h:hulc-string ts *node*))))
 
-(defun make-ae-req ())
+(defun send-ae-req ())
 
-(defun make-ae-res (request))
-
-(defun recv-ae-res (request) (recv-ae request))
+(defun recv-ae-req (request)
+  (tsq:tsq-push *ae-queue* (cons 'ae-request request)))
 
 (defun put-ae (key item)
   (just-put-ae key (send-time) item))
 
 (defun just-put-ae (key ts item)
-  (tsq:tsq-push *ae-queue* (list key ts item))
+  (tsq:tsq-push *ae-queue* (list 'item key ts item))
   ts)
 
 (defun recv-ae (items)
   (let ((ts (recv-time (mapcar #'caar items))))
-    (mapcan (lambda (item)
-              (apply #'just-put-ae item))
-            items)
+    (mapc (lambda (item)
+            (apply #'just-put-ae item))
+          items)
     ts))
 
 (defun get-ae (key)
@@ -52,7 +51,15 @@
 
 (defun ae-reader ()
   (loop do
-    (setq *ae* (apply #'ae:put *ae* (tsq:tsq-pop *ae-queue*)))))
+    (let ((message (tsq:tsq-pop *ae-queue*)))
+      (case (car message)
+        (('item)
+         (apply #'ae:put *ae* (cdr message)))
+
+        (('ae-request)
+         (let ((ae (apply #'ae:make-response *ae* (cdr message))))
+           (send:send 'ae-response ae)
+           (setq *ae* ae)))))))
 
 (defun start-store! ()
   (th:start-multiprocessing)

@@ -5,30 +5,30 @@
 
 (defstruct cluster name listen bootstrap node-id hlc peer-connections handler)
 
+(defun tcp// (str)
+  (concatenate 'string "tcp://" str))
+
 (defun join-cluster! (&key name listen bootstrap (handler #'dispatch))
-  (->> (make-cluster :name name
-                     :listen listen
-                     :bootstrap bootstrap
-                     :hlc (crdt-lisp/hlc:zero)
-                     :peer-connections '()
-                     :handler handler)
-       (start-server!)
-       (connect-bootstrap!)
-       (setq *cluster*)))
+  (setq *cluster*
+        (make-cluster :name name
+                      :listen (tcp// listen)
+                      :bootstrap (tcp// bootstrap)
+                      :hlc (crdt-lisp/hlc:zero)
+                      :peer-connections '()
+                      :handler handler))
+  (start-publisher!)
+  (start-subscriber! (cluster-bootstrap *cluster*)))
 
-(defun send-cluster (c message)
-  (mapcan (lambda (peer-socket)
-            (zmq:send (cdr peer-socket) message))
-          (cluster-peer-connections c)))
-
+;;; TODO maybe a cluster/recv package?
 (defun dispatch (message)
   (case (car message)
     (('item) (st:recv-ae (cdr message)))
-    (('ae-response) (st:recv-ae-res (cdr message)))
-    (('ae-request)
-     (->> (st:make-ae-res (cdr message))
-          (marshal:marshal)
-          (send-cluster *cluster*)))))
+    (('ae-response) (st:recv-ae (cdr message)))
+    (('ae-request) (st:recv-ae-req (cdr message)))
+    (('connect) (start-subscriber! (cadr message)))
+    (t
+     ;; TODO logging
+     t)))
 
 (defun cluster-add-peer (c peer socket)
   (make-cluster :name (cluster-name c)
@@ -39,12 +39,38 @@
                                         (cluster-peer-connections c))
                 :handler (cluster-handler c)))
 
-(defun cluster-add-peer! (peer socket)
-  (th:acquire-lock *cluster-lock*)
-  (let ((c (cluster-add-peer *cluster* peer socket)))
-    (setq *cluster* c)
-    (th:release-lock *cluster-lock*)
-    c))
+(defun start-publisher (c)
+  (zmq:with-context (ctx)
+    (zmq:with-socket (socket ctx :pub)
+      (zmq:bind socket (cluster-listen c))
+      (loop
+        (let ((message (send::send-pop)))
+          (->> (make-instance 'zmq:msg :data message)
+               (zmq:send socket))))))
+  c)
+
+(defun start-subscriber (c peer)
+  (zmq:with-context (ctx)
+    (zmq:with-socket (socket ctx :sub)
+      (zmq:setsockopt socket 'zmq:subscribe "")
+      (zmq:connect socket peer)
+      (loop
+        (let ((message (make-instance 'zmq:msg)))
+          (zmq:recv socket message)
+          (dispatch (send::unpack message))))))
+  (cluster-add-peer c peer))
+
+(defun start-publisher! ()
+  (th:with-lock-held (*cluster-lock*)
+    (->> *cluster*
+         (start-publisher)
+         (setq *cluster*))))
+
+(defun start-subscriber! (peer)
+  (th:with-lock-held (*cluster-lock*)
+    (-<>> *cluster*
+          (start-subscriber <> peer)
+          (setq *cluster*))))
 
 (defun start-server! (c)
   (zmq:with-context (ctx)

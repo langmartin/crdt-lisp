@@ -99,3 +99,7 @@
 
 (defun make-request (store &optional (buckets (default-buckets)))
   (-> store bucket-sort (bucket-group buckets) hash-partitions))
+
+(defun make-response (store request)
+  (declare (ignore store request))
+  '())
