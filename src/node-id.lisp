@@ -16,6 +16,9 @@
   (-> (local-time:now)
       (local-time:timestamp-to-unix)))
 
+(defun epoch-node-id ()
+  (-> 0 cl-intbytes:int32->octets u:b64))
+
 (defun make-node-id ()
   (u:b64
    (concatenate '(vector unsigned-byte)

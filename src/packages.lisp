@@ -21,7 +21,7 @@
   (:import-from :local-time)
   (:local-nicknames (:h :crdt-lisp/hlc) (:u :crdt-lisp/util))
   (:use :cl :cl-arrows)
-  (:export #:make-node-id))
+  (:export #:make-node-id #:epoch-node-id))
 
 (defpackage crdt-lisp/schema
   (:import-from :crdt-lisp/hlc #:make-hlc #:hlc-p #:hlc-time #:hlc-tick #:unix-ms)
@@ -32,7 +32,9 @@
   (:import-from :fset #:$)
   (:import-from :ironclad)
   (:import-from :cl-octet-streams)
-  (:local-nicknames (:h :crdt-lisp/hlc) (:u :crdt-lisp/util))
+  (:local-nicknames (:h :crdt-lisp/hlc)
+                    (:u :crdt-lisp/util)
+                    (:n :crdt-lisp/node-id))
   (:use :cl :cl-arrows)
   (:export #:make-store #:put #:fetch))
 
