@@ -17,7 +17,9 @@
                       :peer-connections '()
                       :handler handler))
   (start-publisher!)
-  (start-subscriber! (cluster-bootstrap *cluster*)))
+  (start-subscriber! (cluster-bootstrap *cluster*))
+  (start-connection-timer!)
+  *cluster*)
 
 ;;; TODO maybe a cluster/recv package?
 (defun dispatch (message)
@@ -25,19 +27,29 @@
     (('item) (st:recv-ae (cdr message)))
     (('ae-response) (st:recv-ae (cdr message)))
     (('ae-request) (st:recv-ae-req (cdr message)))
-    (('connect) (start-subscriber! (cadr message)))
+    (('connect)
+     (let ((peer (cadr message)))
+       (if (not (cluster-has-peer? *cluster* peer))
+           (start-subscriber! peer))))
     (t
      ;; TODO logging
      t)))
 
-(defun cluster-add-peer (c peer socket)
-  (make-cluster :name (cluster-name c)
-                :listen (cluster-listen c)
-                :bootstrap (cluster-bootstrap c)
-                :hlc (cluster-hlc c)
-                :peer-connections (cons (cons peer socket)
-                                        (cluster-peer-connections c))
-                :handler (cluster-handler c)))
+;; https://stackoverflow.com/questions/38421721/returning-a-new-structure-with-fields-changed
+(defun update-struct (struct &rest bindings)
+  (loop
+    with copy = (copy-structure struct)
+    for (slot value) on bindings by #'cddr
+    do (setf (slot-value copy slot) value)
+    finally (return copy)))
+
+(defun cluster-add-peer (c peer)
+  (update-struct c
+                 :peer-connections
+                 (cons peer (cluster-peer-connections c))))
+
+(defun cluster-has-peer? (c peer)
+  (not (null (member peer (cluster-peer-connections c)))))
 
 (defun start-publisher (c)
   (zmq:with-context (ctx)
@@ -72,19 +84,12 @@
           (start-subscriber <> peer)
           (setq *cluster*))))
 
-(defun start-server! (c)
-  (zmq:with-context (ctx)
-    (zmq:with-socket (socket ctx 'zmq:rep)
-      (zmq:bind socket (cluster-listen c))
-      (loop
-        (let ((query (make-instance 'zmq:msg)))
-          (zmq:recv socket query)
-          (funcall (cluster-handler c) query))
-        (zmq:send socket (make-instance 'zmq:msg :data "OK"))))))
+(defun republish-connections ()
+  (th:with-lock-held (*cluster-lock*)
+    (mapc (lambda (peer)
+            (send:send 'connection peer))
+          (cluster-peer-connections *cluster*))))
 
-(defun connect-bootstrap! (c)
-  (zmq:with-context (ctx)
-    (zmq:with-socket (socket ctx 'zmq:req)
-      (let ((peer (cluster-bootstrap c)))
-        (zmq:connect socket peer)
-        (cluster-add-peer c peer socket)))))
+(defun start-connection-timer! ()
+  (-> (sb-ext:make-timer #'republish-connections :name :cluster-republish-connections)
+      (sb-ext:schedule-timer 59)))
