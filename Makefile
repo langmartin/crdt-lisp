@@ -11,6 +11,9 @@ repl: install-deps
 test: install-deps
 	sbcl --eval '(asdf:test-system :crdt-lisp)' --quit
 
+upgrade-deps: install-deps
+	sbcl --eval '(ql:update-dist "quicklisp")' --quit
+
 # ========================================================================
 # Some libraries have to be cloned to local-projects because they're
 # not available in quicklisp repos. Homebrew includes are required for
