@@ -14,7 +14,21 @@
                         (+ 1 (hlc-tick hlc))
                         0))))
 
-(defun recv (hlc message-hlc &optional (system-clock #'default-system-clock))
+(define-condition max-drift-exception (error)
+  ())
+
+(define-condition max-counter-exception (error)
+  ())
+
+(defun drift-ex? (hlc system-time)
+  (> (- system-time (hlc-time hlc))
+     60000))
+
+(defun counter-ex? (hlc)
+  (> (hlc-tick hlc)
+     #xffff))
+
+(defun recv-naive (hlc message-hlc system-time)
   (let ((time (max (hlc-time hlc)
                    (hlc-time message-hlc)
                    (funcall system-clock (hlc-time hlc)))))
@@ -31,6 +45,14 @@
                            (+ 1 (hlc-tick message-hlc)))
 
                           (t 0)))))
+
+(defun recv (hlc message-hlc &optional (system-clock #'default-system-clock))
+  (let* ((system-time (funcall system-clock (hlc-time hlc)))
+         (new (recv-naive hlc message-hlc system-time)))
+    (cond
+      ((drift-ex? new system-time) (error 'max-drift-exception))
+      ((counter-ex? new system-time) (error 'max-counter-exception))
+      ((true) new))))
 
 (defun unix-ms (hlc)
   (hlc-time hlc))
